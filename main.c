@@ -33,7 +33,7 @@ int divisao(int vetor[], int menor, int maior)
     return i;
 }
 
-void quickSort(int vetor[], int menor, int maior)
+void quickSort(int vetor[], int menor, int maior, int condicao, int passos)
 {
     // Encontra o índice do elemento pivô, arr[pivô]
     if (menor < maior)
@@ -41,15 +41,61 @@ void quickSort(int vetor[], int menor, int maior)
         // Envia os parâmetros para a função divisão, começando assim o método
         int indexPivo = divisao(vetor, menor, maior);
         // A função retorna o índice final do pivô
-        printf("Pivo selecionado a partir do elemento mais a direita da lista: \n");
-        printf("Pivo: %d\n", vetor[indexPivo]);
-        printf("Troca: %d no indice: %d <-> %d no indice: %d\n", vetor[indexPivo], indexPivo,  vetor[maior], maior);
-        system("pause");
-        printf("\n");
 
+        if (condicao == 2)//condição para pular o passo a passo comentado
+        {
+            goto resultado;
+        }
+        
+        switch (passos)//switch case para determinar quais passos serão visualizados 
+        {
+        case 1:
+            printf("Pivo selecionado a partir do elemento mais a direita da lista: \n");
+            printf("Pivo: %d\n", vetor[indexPivo]);
+            system("pause");
+            printf("\n");
+            break;
+        case 2:
+            printf("Troca: %d no indice: %d <-> %d no indice: %d\n", vetor[indexPivo], indexPivo,  vetor[maior], maior);
+            system("pause");
+            printf("\n");
+            break;
+        case 3:
+            printf("Divisao do vetor: [");
+            for (int i = menor; i <= maior; i++)
+            {
+                printf("%d", vetor[i]);
+                if (i != maior)
+                printf(", ");
+            }
+            printf("]\n\n");
+            system("pause");
+            printf("\n");
+            break;
+        case 4:
+            printf("Pivo selecionado a partir do elemento mais a direita da lista: \n");
+            printf("Pivo: %d\n", vetor[indexPivo]);
+            printf("Troca: %d no indice: %d <-> %d no indice: %d\n", vetor[indexPivo], indexPivo,  vetor[maior], maior);      
+            printf("Divisao do vetor: [");
+            for (int i = menor; i <= maior; i++)
+            {
+                printf("%d", vetor[i]);
+                if (i != maior)
+                printf(", ");
+            }
+            printf("]\n\n");
+            system("pause");
+            printf("\n");
+            break;
+        default:
+            break;
+        }
+        
+
+    resultado:
         // Ordena os elementos antes e depois do pivô
-        quickSort(vetor, menor, indexPivo - 1);
-        quickSort(vetor, indexPivo + 1, maior);     
+        quickSort(vetor, menor, indexPivo - 1, condicao, passos);
+        quickSort(vetor, indexPivo + 1, maior, condicao, passos);     
     }
     
 }
@@ -131,6 +177,8 @@ void criarVetor(int vetor[], int tamanho, int *count)
 
 int main()
 {
+    clock_t inicio, fim;// Variaveis para contar os giros do clock e assim determinar o tempo para ordenação
+    double tempo_gasto;
     int opcao, tam;
     int count = 0;// Contador para saber se já foi gerado um array
 
@@ -157,14 +205,14 @@ int main()
             case 1:
                 if (count != 0)
                 {
-                    int condicao;
+                    int condicaoVet;
                     printf("\nDeseja criar um vetor diferente?\n");
                     printf("\n|------------------|");
                     printf("\n|    1- sim        |");
                     printf("\n|    2- nao        |");
                     printf("\n|------------------|\n");
-                    scanf("%d", &condicao);
-                    if (condicao == 1)
+                    scanf("%d", &condicaoVet);
+                    if (condicaoVet == 1)
                     {
                         criarVetor(vet, tam, &count);
                         printf("\nVetor criado:\n");
@@ -192,13 +240,13 @@ int main()
                
                 break;
 
-            case 2:
+            case 2:// Ordenação quicksort
                 if (count == 0)
                 {
                     printf("\nNenhum vetor registrado\n");
                 }else
                 {     
-                    int condicao;
+                    int condicao, passos;
     
                     printf("\nSelecione qual das opcoes deseja visualizar: ");
                     printf("\n|---------------------------|");
@@ -208,9 +256,38 @@ int main()
                     scanf("%d", &condicao);
                     if (condicao == 1)
                     {
-                        quickSort(vet, 0, tam - 1);
+                        
+                        printf("\nQual passo deseja visualizar: ");
+                        printf("\n|---------------------------|");
+                        printf("\n|  1-Pivos selecionados     |");
+                        printf("\n|  2-Trocas realizadas      |");
+                        printf("\n|  3-Divisoes do vetor      |");
+                        printf("\n|  4-Todos os passos        |");
+                        printf("\n|---------------------------|\n");
+                        scanf("%d", &passos);
+
+                        inicio = clock(); //giros do clock no começo
+                        quickSort(vet, 0, tam - 1, condicao, passos);
+
+                        fim = clock();//giros do clock no fim
+                        tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
+                        printf("\n|------------------|");
+                        printf("\n| Vetor ordenado:  |");
+                        printf("\n|------------------|\n");
+                        for (int i = 0; i < tam; i++)
+                        {
+                            printf("%d ", vet[i]);
+                        } 
+                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);  
+                        printf("\n");
+                        system("pause");
                     }else
                     {
+                        inicio = clock(); //giros do clock no começo
+                        quickSort(vet, 0, tam - 1, condicao, passos);
+
+                        fim = clock();//giros do clock no fim
+                        tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
                         printf("\n|------------------|");
                         printf("\n| Vetor ordenado:  |");
                         printf("\n|------------------|\n");
@@ -218,6 +295,7 @@ int main()
                         {
                             printf("%d ", vet[i]);
                         }   
+                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
                         printf("\n");
                         system("pause");
                     }                       
@@ -225,7 +303,41 @@ int main()
                 break;
 
             case 3:
-                heapSort(vet, tam);
+                if (count == 0)
+                {
+                    printf("\nNenhum vetor registrado\n");
+                }else
+                {     
+                    int condicao, passos;
+    
+                    printf("\nSelecione qual das opcoes deseja visualizar: ");
+                    printf("\n|---------------------------|");
+                    printf("\n|  1-Ordenacao comentada    |");
+                    printf("\n|  2-resultado da ordenacao |");
+                    printf("\n|---------------------------|\n");
+                    scanf("%d", &condicao);
+                    if (condicao == 1)
+                    {
+                        
+                        printf("\nQual passo deseja visualizar: ");
+                        printf("\n|----------------------------|");
+                        printf("\n|  1-Reconstrucao do heap    |");
+                        printf("\n|  2-Elementos selecionados  |");
+                        printf("\n|  3-Todos os passos         |");
+                        printf("\n|----------------------------|\n");
+                        scanf("%d", &passos);
+
+                        inicio = clock(); //giros do clock no começo
+                        heapSort(vet, tam);
+
+                        fim = clock();//giros do clock no fim
+                        tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
+
+
+
+
+
+
                 for (int i = 0; i < tam; i++)
                 {
                     printf("%d ", vet[i]);

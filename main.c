@@ -120,8 +120,9 @@ void heapify(int vetor[], int tamanho, int i, int passos)
     // compara `A[i]` com seu filho esquerdo e direito
     // e encontre o maior valor
 
-    if (passos == 1 || passos == 3 )
+    if (passos == 1 || passos == 2)
     {
+        printf("\nRaiz: %d", vetor[0]);
         printf("\nElemento atual: %d", vetor[i]);
         if (left < tamanho)
             printf("\nFilho da esquerda: %d", vetor[left]);
@@ -146,7 +147,7 @@ void heapify(int vetor[], int tamanho, int i, int passos)
     // chama heapify no filho
     if (largest != i)
     {
-        if (passos == 1 || passos == 3)
+        if (passos == 1)
         {
             printf("\nTroca: %d no indice: %d <-> Filho maior: %d no indice: %d", vetor[i], i,  vetor[largest], largest);
             printf("\nRepeticao do processo com o %d como elemento atual.", vetor[i]);
@@ -164,21 +165,34 @@ void heapSort(int vetor[], int tamanho, int passos) {
     for (int i = tamanho / 2 - 1; i >= 0; i--) {
         heapify(vetor, tamanho, i, passos);
     }
+    if (passos == 1 || passos == 2)
+    {
+        printf("\nHeap construido(array reorganizado): ");
+        imprimirVetor(vetor, tamanho);
+        system("pause");
+        printf("\n");
+    }
+    
 
     // Extrai elementos do heap um por um
     for (int i = tamanho - 1; i > 0; i--) {
-        // Move a raiz atual para o final do array
-        troca(&vetor[0], &vetor[i]);
 
-        // Chama a função heapify na subárvore reduzida
-        heapify(vetor, i, 0, passos);
-        if (passos == 1 || passos == 3)
+        if (passos == 1)
         {
             printf("\nOrdenacao do heap organizado: ");
+            printf("\nTroca raiz: %d no indice %d <-> Ultimo elemento: %d no indice: %d",vetor[0], 0,vetor[i], i);
+        }
+        // Move a raiz atual para o final do array
+        troca(&vetor[0], &vetor[i]);
+        if (passos == 1)
+        {
             printf("\nPasso %d: ", tamanho - i);
             imprimirVetor(vetor, tamanho);
-            
+            printf("\nReconstrucao do heap: ");
         }
+        
+        // Chama a função heapify na subárvore reduzida
+        heapify(vetor, i, 0, passos);
         
     }
 }
@@ -347,7 +361,7 @@ int main()
                 }
                 break;
 
-            case 3:
+            case 3:// ordenacao heapsort
                 if (count == 0)
                 {
                     printf("\nNenhum vetor registrado\n");
@@ -365,11 +379,10 @@ int main()
                     {
                         
                         printf("\nQual passo deseja visualizar: ");
-                        printf("\n|----------------------------|");
-                        printf("\n|  1-Reconstrucao do heap    |");
-                        printf("\n|  2-Elementos selecionados  |");
-                        printf("\n|  3-Todos os passos         |");
-                        printf("\n|----------------------------|\n");
+                        printf("\n|---------------------------------------|");
+                        printf("\n|  1-Construcao e reconstrucao do heap  |");
+                        printf("\n|  2-Somente os elementos selecionados  |");
+                        printf("\n|---------------------------------------|\n");
                         scanf("%d", &passos);
 
                         inicio = clock(); //giros do clock no começo
@@ -391,6 +404,14 @@ int main()
 
                     }else
                     {
+                        int condicao = 0; //reinicia as variáveis para exibir somente a ordenação
+                        int passos = 0;
+
+                        inicio = clock(); //giros do clock no começo
+                        heapSort(vet, tam, passos);
+
+                        fim = clock();//giros do clock no fim
+                        tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
                         printf("\n|------------------|");
                         printf("\n| Vetor ordenado:  |");
                         printf("\n|------------------|\n");
@@ -400,10 +421,10 @@ int main()
                         }
                         printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
                         printf("\n");
-                        system("pause"); 
-                        break;
+                        system("pause");                      
                     }
                 }
+                break;
             case 4:                
                 printf("\n   Programa encerrado.");
                 opcao = 4;

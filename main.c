@@ -2,12 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 
+int comparacoes = 0;
+int trocas = 0;
 // função que realiza a troca de valores em ambos os métodos de ordenação
 void troca(int *x, int *y)
 {
     int temp = *x;
     *x = *y;
     *y = temp;
+    trocas++;
 }
 
 int divisao(int vetor[], int menor, int maior)
@@ -18,6 +21,7 @@ int divisao(int vetor[], int menor, int maior)
     // Percorre os elementos da lista a partir do menor elemento
     for (int j = menor; j < maior; j++)
     {
+        comparacoes++;
         // Se o elemento atual for menor ou igual ao pivô
         if (vetor[j] <= pivo)
         {
@@ -136,10 +140,12 @@ void heapify(int vetor[], int tamanho, int i, int passos)
     int largest = i;
  
     if (left < tamanho && vetor[left] > vetor[i]) {
+        comparacoes++;
         largest = left;
     }
  
     if (right < tamanho && vetor[right] > vetor[largest]) {
+        comparacoes++;
         largest = right;
     }
  
@@ -254,6 +260,7 @@ int main()
         printf("\n|  3- Ordenar por HeapSort           |");
         printf("\n|  4- Sair do programa               |");
         printf("\n|------------------------------------|\n");
+        printf("\nA cada ordenacao realizada crie um novo array");
         printf("\nInsira o numero correspondente a uma das opcoes acima: ");
         scanf("%d", &opcao);
 
@@ -315,6 +322,8 @@ int main()
                     scanf("%d", &condicao);
                     if (condicao == 1)
                     {
+                        comparacoes = 0;
+                        trocas = 0;
                         
                         printf("\nQual passo deseja visualizar: ");
                         printf("\n|---------------------------|");
@@ -337,11 +346,16 @@ int main()
                         {
                             printf("%d ", vet[i]);
                         } 
-                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);  
+                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto); 
+                        printf("\nNumero de comparacoes: %d", comparacoes);
+                        printf("\nNumero de trocas: %d", trocas); 
                         printf("\n");
                         system("pause");
                     }else
                     {
+                        comparacoes = 0;
+                        trocas = 0;
+
                         inicio = clock(); //giros do clock no começo
                         quickSort(vet, 0, tam - 1, condicao, passos);
 
@@ -355,6 +369,8 @@ int main()
                             printf("%d ", vet[i]);
                         }   
                         printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
+                        printf("\nNumero de comparacoes: %d", comparacoes);
+                        printf("\nNumero de trocas: %d", trocas);
                         printf("\n");
                         system("pause");
                     }                       
@@ -368,6 +384,8 @@ int main()
                 }else
                 {     
                     int condicao, passos;
+                    comparacoes = 0;
+                    trocas = 0;
     
                     printf("\nSelecione qual das opcoes deseja visualizar: ");
                     printf("\n|---------------------------|");
@@ -398,6 +416,8 @@ int main()
                             printf("%d ", vet[i]);
                         }
                         printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
+                        printf("\nNumero de comparacoes: %d", comparacoes);
+                        printf("\nNumero de trocas: %d", trocas);
                         printf("\n");
                         system("pause"); 
                         break;
@@ -406,6 +426,8 @@ int main()
                     {
                         int condicao = 0; //reinicia as variáveis para exibir somente a ordenação
                         int passos = 0;
+                        comparacoes = 0;
+                        trocas = 0;
 
                         inicio = clock(); //giros do clock no começo
                         heapSort(vet, tam, passos);
@@ -420,6 +442,8 @@ int main()
                             printf("%d ", vet[i]);
                         }
                         printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
+                        printf("\nNumero de comparacoes: %d", comparacoes);
+                        printf("\nNumero de trocas: %d", trocas);
                         printf("\n");
                         system("pause");                      
                     }

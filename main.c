@@ -100,13 +100,38 @@ void quickSort(int vetor[], int menor, int maior, int condicao, int passos)
     
 }
 
-void heapify(int vetor[], int tamanho, int i)
+void imprimirVetor(int vetor[], int tamanho)
+{
+    printf("[");
+    for (int i = 0; i < tamanho; i++)
+    {
+        printf("%d", vetor[i]);
+        if (i != tamanho - 1)
+            printf(", ");
+    }
+    printf("]\n");
+}
+
+void heapify(int vetor[], int tamanho, int i, int passos)
 {
     // obtém filho esquerdo e direito do nó no índice `i`
     int left = 2 * i + 1;
     int right = 2* i + 2;
     // compara `A[i]` com seu filho esquerdo e direito
     // e encontre o maior valor
+
+    if (passos == 1 || passos == 3 )
+    {
+        printf("\nElemento atual: %d", vetor[i]);
+        if (left < tamanho)
+            printf("\nFilho da esquerda: %d", vetor[left]);
+        if (right < tamanho)
+            printf("\nFilho da direita: %d", vetor[right]);
+        printf("\n");
+        system("pause");
+        
+    }
+
     int largest = i;
  
     if (left < tamanho && vetor[left] > vetor[i]) {
@@ -121,15 +146,23 @@ void heapify(int vetor[], int tamanho, int i)
     // chama heapify no filho
     if (largest != i)
     {
+        if (passos == 1 || passos == 3)
+        {
+            printf("\nTroca: %d no indice: %d <-> Filho maior: %d no indice: %d", vetor[i], i,  vetor[largest], largest);
+            printf("\nRepeticao do processo com o %d como elemento atual.", vetor[i]);
+            printf("\n");
+            system("pause");
+        }
+        
         troca(&vetor[i], &vetor[largest]);
-        heapify(vetor, tamanho, largest); 
+        heapify(vetor, tamanho, largest, passos); 
     }
 }
 
-void heapSort(int vetor[], int tamanho) {
+void heapSort(int vetor[], int tamanho, int passos) {
     // Constrói o heap (reorganiza o array)
     for (int i = tamanho / 2 - 1; i >= 0; i--) {
-        heapify(vetor, tamanho, i);
+        heapify(vetor, tamanho, i, passos);
     }
 
     // Extrai elementos do heap um por um
@@ -138,7 +171,15 @@ void heapSort(int vetor[], int tamanho) {
         troca(&vetor[0], &vetor[i]);
 
         // Chama a função heapify na subárvore reduzida
-        heapify(vetor, i, 0);
+        heapify(vetor, i, 0, passos);
+        if (passos == 1 || passos == 3)
+        {
+            printf("\nOrdenacao do heap organizado: ");
+            printf("\nPasso %d: ", tamanho - i);
+            imprimirVetor(vetor, tamanho);
+            
+        }
+        
     }
 }
 
@@ -180,6 +221,7 @@ int main()
     clock_t inicio, fim;// Variaveis para contar os giros do clock e assim determinar o tempo para ordenação
     double tempo_gasto;
     int opcao, tam;
+    int *ponteiroTam = &tam;
     int count = 0;// Contador para saber se já foi gerado um array
 
     printf("\n|-----------------------------------------------|");
@@ -203,6 +245,7 @@ int main()
 
         switch (opcao) {
             case 1:
+                
                 if (count != 0)
                 {
                     int condicaoVet;
@@ -214,6 +257,8 @@ int main()
                     scanf("%d", &condicaoVet);
                     if (condicaoVet == 1)
                     {
+                        printf("\nInsira o tamanho do vetor a ser criado: ");
+                        scanf("%d", ponteiroTam);
                         criarVetor(vet, tam, &count);
                         printf("\nVetor criado:\n");
                         for (int i = 0; i < tam; i++)
@@ -328,24 +373,37 @@ int main()
                         scanf("%d", &passos);
 
                         inicio = clock(); //giros do clock no começo
-                        heapSort(vet, tam);
+                        heapSort(vet, tam, passos);
 
                         fim = clock();//giros do clock no fim
                         tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
+                        printf("\n|------------------|");
+                        printf("\n| Vetor ordenado:  |");
+                        printf("\n|------------------|\n");
+                        for (int i = 0; i < tam; i++)
+                        {
+                            printf("%d ", vet[i]);
+                        }
+                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
+                        printf("\n");
+                        system("pause"); 
+                        break;
 
-
-
-
-
-
-                for (int i = 0; i < tam; i++)
-                {
-                    printf("%d ", vet[i]);
+                    }else
+                    {
+                        printf("\n|------------------|");
+                        printf("\n| Vetor ordenado:  |");
+                        printf("\n|------------------|\n");
+                        for (int i = 0; i < tam; i++)
+                        {
+                            printf("%d ", vet[i]);
+                        }
+                        printf("\nTempo gasto para o uso do metodo: %.5lf segundos", tempo_gasto);
+                        printf("\n");
+                        system("pause"); 
+                        break;
+                    }
                 }
-                printf("\n");
-                system("pause"); 
-                break;
-
             case 4:                
                 printf("\n   Programa encerrado.");
                 opcao = 4;
